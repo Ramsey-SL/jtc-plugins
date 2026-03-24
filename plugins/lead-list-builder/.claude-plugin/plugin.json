@@ -1,0 +1,22 @@
+{
+  "name": "lead-list-builder",
+  "version": "2.0.0",
+  "description": "Lead List Builder — complete lead generation and pipeline management system. Research leads, draft personalized outreach, track status, deploy interactive dashboards, connect CRM/email/calendar/social tools, automate new lead discovery, and manage daily/weekly/monthly workflow with alerts, reviews, and reports. Integrates with Brand Knowledge Center.",
+  "author": {
+    "name": "Strategy Labs",
+    "email": "scott@strategylabs.us"
+  },
+  "keywords": [
+    "lead generation",
+    "prospecting",
+    "outreach",
+    "lead list",
+    "sales",
+    "business development",
+    "lead tracking",
+    "dashboard",
+    "CRM"
+  ],
+  "license": "MIT",
+  "homepage": "https://strategylabs.us"
+}

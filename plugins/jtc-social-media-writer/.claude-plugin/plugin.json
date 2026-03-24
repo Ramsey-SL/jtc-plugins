@@ -1,0 +1,8 @@
+{
+  "name": "jtc-social-media-writer",
+  "version": "1.0.0",
+  "description": "JTC Social Media Writer \u2014 generates Facebook, Instagram, and Google Business posts from job details in JTC's brand voice",
+  "author": {
+    "name": "Strategy Labs"
+  }
+}

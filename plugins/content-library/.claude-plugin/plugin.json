@@ -1,0 +1,12 @@
+{
+  "name": "content-library",
+  "version": "1.0.0",
+  "description": "Content Library — the indexed backlog of all approved marketing copy and the searchable catalogue of brand visual assets. Surfaces existing approved copy before new copy is written. Prompts for approval and storage after every copy session. Integrated with brand-asset-manager for asset discovery.",
+  "author": {
+    "name": "Strategy Labs",
+    "email": "scott@strategylabs.us"
+  },
+  "keywords": ["content library", "approved copy", "asset library", "copy backlog", "content management", "ad copy library", "email copy", "brand assets", "content database"],
+  "license": "MIT",
+  "homepage": "https://github.com/StrategyLabsFulcrum/marketplace"
+}

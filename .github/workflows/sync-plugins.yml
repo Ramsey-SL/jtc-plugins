@@ -1,0 +1,92 @@
+name: Sync plugins from Strategy Labs marketplace
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6am UTC
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout JTC plugins repo
+        uses: actions/checkout@v4
+
+      - name: Clone source marketplace
+        run: |
+          git clone --depth 1 https://github.com/StrategyLabsFulcrum/marketplace.git /tmp/source-marketplace
+
+      - name: Sync selected plugins
+        run: |
+          PLUGINS=(
+            "ad-copy"
+            "brand-asset-manager"
+            "brand-intelligence-center"
+            "brand-knowledge-center"
+            "competitive-landscape"
+            "content-library"
+            "customer-driven-optimizations"
+            "inbox-command-center"
+            "lead-list-builder"
+          )
+
+          for plugin in "${PLUGINS[@]}"; do
+            SRC="/tmp/source-marketplace/plugins/${plugin}"
+            DEST="plugins/${plugin}"
+            if [ -d "$SRC" ]; then
+              rm -rf "$DEST"
+              cp -r "$SRC" "$DEST"
+              echo "Synced: ${plugin}"
+            else
+              echo "SKIP (not found in source): ${plugin}"
+            fi
+          done
+
+          # Don't touch jtc-social-media-writer — it's custom and not in the source marketplace
+          echo "Preserved custom plugin: jtc-social-media-writer"
+
+      - name: Rebuild marketplace.json
+        run: |
+          python3 << 'EOF'
+          import json, os
+
+          plugins_dir = "plugins"
+          entries = []
+
+          for plugin_name in sorted(os.listdir(plugins_dir)):
+              pj_path = os.path.join(plugins_dir, plugin_name, ".claude-plugin", "plugin.json")
+              if os.path.exists(pj_path):
+                  with open(pj_path) as f:
+                      pj = json.load(f)
+                  entries.append({
+                      "name": pj["name"],
+                      "version": pj.get("version", "1.0.0"),
+                      "description": pj.get("description", ""),
+                      "path": f"./plugins/{plugin_name}"
+                  })
+
+          marketplace = {
+              "name": "JTC Plugins",
+              "description": "Curated plugin marketplace for JTC Enterprises — built by Strategy Labs",
+              "version": "1.0.0",
+              "plugins": entries
+          }
+
+          os.makedirs(".claude-plugin", exist_ok=True)
+          with open(".claude-plugin/marketplace.json", "w") as f:
+              json.dump(marketplace, f, indent=2)
+
+          print(f"Updated marketplace.json with {len(entries)} plugins")
+          EOF
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-sync plugins from Strategy Labs marketplace"
+            git push
+          fi

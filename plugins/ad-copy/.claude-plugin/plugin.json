@@ -1,0 +1,12 @@
+{
+  "name": "ad-copy",
+  "version": "1.0.0",
+  "description": "Ad Copywriter — writes paid advertising copy for Meta (Facebook/Instagram), Google RSA, TikTok, LinkedIn, and Pinterest. Checks the content library for existing approved copy before writing new copy. Surfaces character-limit-compliant variants with multiple hook angles for A/B testing.",
+  "author": {
+    "name": "Strategy Labs",
+    "email": "scott@strategylabs.us"
+  },
+  "keywords": ["ad copy", "Meta ads", "Google ads", "TikTok ads", "LinkedIn ads", "paid social", "copywriting", "ad variants", "headlines", "RSA"],
+  "license": "MIT",
+  "homepage": "https://github.com/StrategyLabsFulcrum/marketplace"
+}
