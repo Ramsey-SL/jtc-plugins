@@ -1,67 +1,229 @@
 {
-  "name": "JTC Plugins",
+  "name": "jtc-plugins",
   "description": "Curated plugin marketplace for JTC Enterprises \u2014 built by Strategy Labs",
-  "version": "1.0.0",
+  "owner": {
+    "name": "Strategy Labs",
+    "email": "scott@strategylabs.us",
+    "url": "https://strategylabs.us"
+  },
   "plugins": [
     {
       "name": "ad-copy",
-      "version": "1.0.0",
+      "source": "./plugins/ad-copy",
       "description": "Ad Copywriter \u2014 writes paid advertising copy for Meta (Facebook/Instagram), Google RSA, TikTok, LinkedIn, and Pinterest. Checks the content library for existing approved copy before writing new copy. Surfaces character-limit-compliant variants with multiple hook angles for A/B testing.",
-      "path": "./plugins/ad-copy"
+      "version": "1.0.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "ad copy",
+        "Meta ads",
+        "Google ads",
+        "TikTok ads",
+        "LinkedIn ads",
+        "paid social",
+        "copywriting",
+        "ad variants",
+        "headlines",
+        "RSA"
+      ],
+      "license": "MIT"
     },
     {
       "name": "brand-asset-manager",
-      "version": "1.0.0",
+      "source": "./plugins/brand-asset-manager",
       "description": "Brand Asset Manager \u2014 organize, rename, describe, and catalog brand photos and videos into a searchable folder structure. Analyzes each asset, generates descriptions, suggests channel usage, flags duplicates, and maintains a searchable manifest. Integrates with Brand Knowledge Center for brand-aware categorization.",
-      "path": "./plugins/brand-asset-manager"
+      "version": "1.0.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "brand assets",
+        "photo organization",
+        "video organization",
+        "asset management",
+        "image catalog",
+        "metadata",
+        "duplicate detection",
+        "content library"
+      ],
+      "license": "MIT"
     },
     {
       "name": "brand-intelligence-center",
-      "version": "1.0.0",
+      "source": "./plugins/brand-intelligence-center",
       "description": "Brand Intelligence Center \u2014 a guided setup wizard that builds a comprehensive brand profile covering business fundamentals, customer psychology, differentiation, brand voice, proof points, and digital ecosystem. Merges operational brand depth with conversion intelligence. Outputs a structured brand-intelligence-center/ folder that serves as the foundation for all Strategy Labs marketplace plugins.",
-      "path": "./plugins/brand-intelligence-center"
+      "version": "1.0.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "brand setup",
+        "brand knowledge",
+        "brand onboarding",
+        "business profile",
+        "competitive landscape",
+        "brand guidelines",
+        "audience messaging",
+        "customer psychology",
+        "JTBD",
+        "differentiation",
+        "brand voice",
+        "proof points"
+      ],
+      "license": "MIT"
     },
     {
       "name": "brand-knowledge-center",
-      "version": "1.0.0",
+      "source": "./plugins/brand-knowledge-center",
       "description": "Brand Knowledge Center \u2014 a step-by-step setup wizard that builds a comprehensive brand profile covering business fundamentals, financials, digital presence, brand identity, audience messaging, and competitive landscape. Generates a structured brand-knowledge-center/ folder that serves as the foundation for all Strategy Labs marketplace plugins.",
-      "path": "./plugins/brand-knowledge-center"
+      "version": "1.0.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "brand setup",
+        "brand knowledge",
+        "brand onboarding",
+        "business profile",
+        "competitive landscape",
+        "brand guidelines",
+        "audience messaging",
+        "financial context"
+      ],
+      "license": "MIT"
     },
     {
       "name": "competitive-landscape",
-      "version": "1.0.0",
+      "source": "./plugins/competitive-landscape",
       "description": "Track competitors, analyze their ad strategies across Meta and Google, map customer journeys on competitor sites, and generate competitive intelligence reports. Provides a complete toolkit for understanding and outmaneuvering the competitive landscape any brand operates in.",
-      "path": "./plugins/competitive-landscape"
+      "version": "1.0.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "competitor analysis",
+        "competitive intelligence",
+        "ad analysis",
+        "meta ads",
+        "google ads",
+        "customer journey",
+        "market research",
+        "brand strategy",
+        "competitive positioning",
+        "ad trends"
+      ],
+      "license": "MIT"
     },
     {
       "name": "content-library",
-      "version": "1.0.0",
+      "source": "./plugins/content-library",
       "description": "Content Library \u2014 the indexed backlog of all approved marketing copy and the searchable catalogue of brand visual assets. Surfaces existing approved copy before new copy is written. Prompts for approval and storage after every copy session. Integrated with brand-asset-manager for asset discovery.",
-      "path": "./plugins/content-library"
+      "version": "1.0.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "content library",
+        "approved copy",
+        "asset library",
+        "copy backlog",
+        "content management",
+        "ad copy library",
+        "email copy",
+        "brand assets",
+        "content database"
+      ],
+      "license": "MIT"
     },
     {
       "name": "customer-driven-optimizations",
-      "version": "1.1.0",
+      "source": "./plugins/customer-driven-optimizations",
       "description": "Analyze recorded customer phone calls to extract competitive intelligence, identify site optimization opportunities, map customer journeys, and generate a deployable HTML dashboard. Supports both audio files and pre-made transcripts. Integrates with Brand Content OS for brand context. Includes frontend-design skill for production-grade, distinctive dashboard UI.",
-      "path": "./plugins/customer-driven-optimizations"
+      "version": "1.1.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "phone calls",
+        "call analysis",
+        "customer intelligence",
+        "competitor analysis",
+        "customer journey",
+        "site optimization",
+        "dashboard",
+        "voice of customer",
+        "transcription",
+        "frontend design",
+        "ui design"
+      ],
+      "license": "MIT"
     },
     {
       "name": "inbox-command-center",
-      "version": "1.3.0",
+      "source": "./plugins/inbox-command-center",
       "description": "Inbox Command Center \u2014 AI communications manager that triages Gmail, Slack, iMessage, and messaging platforms. Auto-categorizes messages, drafts replies in your authentic voice (learned from transcripts, phone calls, sent emails, Slack messages, and A/B calibration), manages calendar conflicts, tracks tasks, creates smart rules with delete/prioritization/folder-based options, delivers scheduled daily briefings and VIP summaries with pre-written drafts, generates monthly inbox reports with full analytics, and sends reminders via dedicated Slack channel, Slack DM, or iMessage. Integrates with Brand Knowledge Center for brand-voice drafting.",
-      "path": "./plugins/inbox-command-center"
+      "version": "1.3.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "email management",
+        "inbox triage",
+        "Gmail",
+        "Slack",
+        "iMessage",
+        "communications",
+        "voice profile",
+        "draft replies",
+        "calendar",
+        "task tracker",
+        "inbox rules",
+        "delete rules",
+        "prioritization rules",
+        "folder rules",
+        "VIP contacts",
+        "VIP summary",
+        "inbox report",
+        "email analytics",
+        "daily briefing",
+        "reminders",
+        "scheduled reminders",
+        "voice review"
+      ],
+      "license": "MIT"
     },
     {
       "name": "jtc-social-media-writer",
-      "version": "1.0.0",
+      "source": "./plugins/jtc-social-media-writer",
       "description": "JTC Social Media Writer \u2014 generates Facebook, Instagram, and Google Business posts from job details in JTC's brand voice",
-      "path": "./plugins/jtc-social-media-writer"
+      "version": "1.0.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [],
+      "license": "MIT"
     },
     {
       "name": "lead-list-builder",
-      "version": "2.0.0",
+      "source": "./plugins/lead-list-builder",
       "description": "Lead List Builder \u2014 complete lead generation and pipeline management system. Research leads, draft personalized outreach, track status, deploy interactive dashboards, connect CRM/email/calendar/social tools, automate new lead discovery, and manage daily/weekly/monthly workflow with alerts, reviews, and reports. Integrates with Brand Knowledge Center.",
-      "path": "./plugins/lead-list-builder"
+      "version": "2.0.0",
+      "author": {
+        "name": "Strategy Labs"
+      },
+      "keywords": [
+        "lead generation",
+        "prospecting",
+        "outreach",
+        "lead list",
+        "sales",
+        "business development",
+        "lead tracking",
+        "dashboard",
+        "CRM"
+      ],
+      "license": "MIT"
     }
   ]
 }
