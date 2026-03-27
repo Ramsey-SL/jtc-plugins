@@ -2,8 +2,10 @@ name: Sync plugins from Strategy Labs marketplace
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [sync-plugins]
   schedule:
-    - cron: '0 6 * * 1'  # Every Monday at 6am UTC
+    - cron: '0 */6 * * *'  # Every 6 hours as a fallback
 
 jobs:
   sync:
@@ -14,7 +16,7 @@ jobs:
 
       - name: Clone source marketplace
         run: |
-          git clone --depth 1 https://github.com/StrategyLabsFulcrum/marketplace.git /tmp/source-marketplace
+          git clone --depth 1 https://${{ secrets.MARKETPLACE_TOKEN }}@github.com/StrategyLabsFulcrum/marketplace.git /tmp/source-marketplace
 
       - name: Sync selected plugins
         run: |
@@ -77,6 +79,8 @@ jobs:
               json.dump(marketplace, f, indent=2)
 
           print(f"Updated marketplace.json with {len(entries)} plugins")
+          for e in entries:
+              print(f"  {e['name']} v{e['version']}")
           EOF
 
       - name: Commit and push if changed
@@ -87,6 +91,8 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Auto-sync plugins from Strategy Labs marketplace"
+            CHANGED=$(git diff --staged --name-only | grep "^plugins/" | sed 's|plugins/||;s|/.*||' | sort -u | tr '\n' ', ' | sed 's/,$//')
+            git commit -m "Auto-sync from Strategy Labs marketplace: ${CHANGED}"
             git push
+            echo "Pushed updates for: ${CHANGED}"
           fi

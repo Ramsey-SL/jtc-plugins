@@ -14,7 +14,7 @@ Triggers on: "check my email", "triage", "what did I miss", "any new emails", "i
 5. If Brand Knowledge Center exists, load `brand-identity.md` for brand-voice drafting.
 6. **Version check:** Compare `Plugin Version` in config against current plugin version. If updated, show the update briefing (see SKILL.md → Plugin Update Notifications) before starting triage. Walk through new feature setup if the user chooses.
 7. **Pending update check:** If `pending_update_setup` is set in config, show a brief reminder: "You have new features from [version] that need setup. Say 'set up updates' to configure." (stops after 3 reminders)
-8. **Monthly VIP check:** Read `last_vip_review` from config. If review is due per the user's configured VIP review cadence, trigger the Monthly VIP Review prompt (from setup-wizard.md) before starting triage. Update the date after review or skip.
+8. **VIP review check:** Read `last_vip_review` and VIP review cadence from config. If the review is due per the user's configured cadence (monthly / bi-weekly / weekly / quarterly / on demand), trigger the VIP Review prompt (from setup-wizard.md) before starting triage. Update the date after review or skip. If cadence is "on demand", skip this check entirely.
 9. **Voice profile review check:** Read `voice_profile_last_reviewed` from config. If review is due per the user's configured voice review cadence (monthly minimum), trigger the Mandatory Monthly Voice Review prompt (see SKILL.md) before starting triage.
 10. **Inbox report check:** Read `inbox_report_last_generated` from config. If a report is due per the user's configured cadence, note it and generate after triage completes (or remind: "Your monthly inbox report is due. I'll generate it after triage.")
 11. Load folder rules from `[data-path]/folder-rules.md`.
@@ -34,23 +34,35 @@ Ask: **"When did you last check email?"** or accept a stated timeframe.
 
 ## Step 2: Pull Messages
 
-### Email
+### Email — ALWAYS Query Both Gmail MCP AND Rube
 
-Run TWO searches in parallel:
+**IMPORTANT:** Every email pull must query ALL connected email sources in parallel — both Gmail MCP and any Rube-connected email accounts (Gmail via Rube, Outlook, etc.). Never rely on a single source. Merge and deduplicate results before presenting.
 
-**Starred emails:**
+**Via Gmail MCP — run TWO searches:**
+
+Starred emails:
 ```
 q: "is:starred is:unread"
 maxResults: 20
 ```
 
-**Unread inbox:**
+Unread inbox:
 ```
 q: "in:inbox is:unread after:YYYY/MM/DD"
 maxResults: 50
 ```
 
-Deduplicate (starred may appear in both). If multiple inboxes connected, search all and label which account each came from.
+**Via Rube — run matching searches in parallel:**
+
+Query all Rube-connected email accounts with equivalent search criteria (starred + unread, unread inbox for time range). This ensures emails from Outlook, secondary Gmail accounts, or any Rube-connected mail provider are included.
+
+**Merge & Deduplicate:**
+
+After both sources return results:
+1. Combine all results into a single list
+2. Deduplicate by Message-ID or sender + subject + timestamp
+3. Label which account/connection each email came from (e.g., "[Gmail MCP]", "[Outlook via Rube]")
+4. If the same email appears from both MCP and Rube, keep one and note the source
 
 ### Slack (if connected)
 
@@ -81,7 +93,7 @@ Before presenting anything, run all active rules and folder rules against every 
 2. Route emails to folders based on folder rules (Low Priority, Newsletters, Finance, etc.)
 3. Track which rules were applied and which folders received emails
 4. Auto-processed messages are NOT shown individually — summarized at the top
-5. **VIP check** — Any emails from VIP senders are flagged for immediate alert (see Step 4a)
+5. **VIP check** — Any emails from VIP senders are flagged for immediate alert (see Step 4)
 
 **Rules & Folder Summary:**
 
@@ -281,18 +293,51 @@ After the user gives their calls:
 
 > "✓ Done — #3, #9 marked read. #4-7 deleted."
 
-### Draft Actions (process one at a time)
-For each `draft`:
+### Draft Actions
+
+**Single draft:** Generate and present immediately for review. Save/send only after approval.
+
+**Multiple drafts (2 or more) — batch mode:** Generate all drafts in parallel, present together for a single review pass. Eliminates sequential back-and-forth.
+
+For each draft:
 1. Read the full email thread
 2. Determine voice: personal voice (default) or brand voice (if recipient is a client and BKC connected)
-3. Ask: "What tone for this one?" (or auto-select based on VIP contact settings)
+3. Auto-select tone from VIP contact settings; otherwise use voice profile defaults
 4. Draft in the user's voice
-5. Present for review:
-   > **Draft reply to Jim Schlosser:**
-   > [Draft text]
-   >
-   > **Save as draft? Edit? Start over?**
-6. Only save after approval
+
+**Batch format:**
+
+```
+DRAFTS READY — 3 to review
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DRAFT 1 — Reply to Jim Schlosser (Email)
+[Full draft text]
+
+[Save as Draft / Send / Edit / Start Over]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DRAFT 2 — Reply to Joel Barbour (Email)
+[Full draft text]
+
+[Save as Draft / Send / Edit / Start Over]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DRAFT 3 — Reply to Kory Davis (iMessage)
+[Draft text]
+
+[Send / Edit / Start Over]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Say "approve all" to save/send all, or call out specific ones:
+"1: approve, 2: edit — make it shorter, 3: approve"
+```
+
+- **"Save as Draft"** appears when email is connected via Gmail MCP (draft only — user sends manually from Gmail)
+- **"Send"** appears when email is connected via Rube (full write) or for iMessage/Slack
+- When editing a single draft in a batch, regenerate and re-present only that draft
+- Only save/send after the user approves each draft or says "approve all"
 
 ### Remind Actions
 For each `remind [time]` or `remind [time] via [channel]`:
@@ -315,6 +360,37 @@ Process:
 2. Add to task tracker + calendar + schedule delivery via configured channel
 3. For recurring reminders: store the recurrence pattern, auto-schedule next instance after each fires
 4. Confirm: "✓ T018 created — I'll remind you to [task] at [time] via [channel]"
+
+### Unsubscribe Actions
+
+For each `unsub`, execute the unsubscribe — not just flag it. Behavior depends on `unsubscribe_mode` in config.
+
+**For each sender:**
+1. Check for `List-Unsubscribe` header in the raw email:
+   - `mailto:` → send the unsubscribe email automatically
+   - `https://` → execute a GET request to complete the unsubscribe
+2. If no header, scan the email body for "unsubscribe", "opt out", "manage preferences" links → extract URL
+3. If nothing found → offer to create an auto-junk rule for the sender
+
+**In `auto` mode:** Execute immediately, report in the confirmation line with other immediate actions.
+
+**In `batch` mode:** Queue all unsubscribes and present at the end of triage:
+
+```
+UNSUBSCRIBE QUEUE — [X] senders
+
+├── [sender1] — List-Unsubscribe header ✓ (will execute automatically)
+├── [sender2] — Link found: [url] — confirm? [Yes / Skip]
+└── [sender3] — No mechanism found — create auto-junk rule? [Yes / Skip]
+
+[Execute all] [Review each]
+```
+
+**In `manual` mode:** Surface the link or header URL, let the user handle it.
+
+**After each successful unsubscribe:**
+- Create a rule to auto-junk future emails from that sender (they may still arrive)
+- Count in the triage complete summary under "🔕 Unsubscribed"
 
 ### Delegate Actions
 For each `delegate [name]`:
